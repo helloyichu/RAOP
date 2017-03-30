@@ -1,0 +1,57 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Mar 30 22:07:04 2017
+
+@author: hello
+"""
+
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import re
+from nltk.corpus import subjectivity
+from nltk.sentiment import SentimentAnalyzer
+from nltk.sentiment.util import *
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.classify import SklearnClassifier
+
+def get_words_in_posts(posts):
+    all = []
+    for (words, sentiment) in posts:
+        all.extend(words)
+    return all
+
+def get_word_features(wordlist):
+    wordlist = nltk.FreqDist(wordlist)
+    features = wordlist.keys()
+    return features
+
+w_features = get_word_features(get_words_in_posts(posts))
+
+def extract_features(document):
+    document_words = set(document)
+    features = {}
+    for word in w_features:
+        features['containts(%s)' % word] = (word in document_words)
+    return features
+
+def text_manipulation(posts):
+    attachment = []
+    raop = []
+    for index,post in posts.iterrows():
+        if 'http' in post['request_text_edit_aware']:
+            attachment.extend('1')      
+        else: 
+            attachment.extend('0') 
+    return attachment
+
+def clean_words(corpus):
+    letters_only = re.sub("[^a-zA-Z0-9]", " ", corpus) 
+    words = letters_only.lower().split()   
+    return (' '.join(words))
+
+def remove_stop(corpus):
+    stopwords_set = set(stopwords.words("english"))
+    corpus = corpus.split()
+    words = [word for word in corpus if not word in stopwords_set]
+    return (' '.join(words))
