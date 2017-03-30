@@ -20,8 +20,7 @@ def clearTextFeatures(textFeatures):
 
     return (textFeatures[filter], filter)
 
-def clusterLearning(textArray):
-
+def newCountVectorizer(textArray):
     cv = CountVectorizer()
 
     countVectors = np.array(cv.fit_transform(textArray).toarray())
@@ -40,15 +39,21 @@ def clusterLearning(textArray):
     for i in range(len(countVectors)):
         updatedCountVectors.append(countVectors[i][filter])
 
-
-
     updatedCountVectors = np.array(updatedCountVectors)
+
+    return (updatedCountVectors, textFeatures, countVectors)
+
+
+def clusterLearning(textArray, numberOfCluster):
+
+
+    a= newCountVectorizer(textArray)
+    updatedCountVectors = a[0]
+    textFeatures= a[1]
 
     print updatedCountVectors.shape
 
-    kmeans = KMeans(n_clusters=4,random_state=0).fit(updatedCountVectors)
-
-
+    kmeans = KMeans(n_clusters=numberOfCluster,random_state=0).fit(updatedCountVectors)
     clusterMeans = kmeans.cluster_centers_
     for i in range(len(clusterMeans)):
         f1= max(clusterMeans[i])

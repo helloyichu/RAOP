@@ -125,7 +125,7 @@ print 'if predict all as 0 , accuracy will be', 1 - count / len(dev_labels)
 
 print ""
 print "Build text analyzer"
-kmeans=raopUtil.clusterLearning(textTraining)
+kmeans=raopUtil.clusterLearning(textTraining, 4)
 cluster = np.array(kmeans.labels_)
 
 clusterDev=kmeans.predict(textDev)
